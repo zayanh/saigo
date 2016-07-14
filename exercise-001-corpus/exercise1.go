@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "os"
     "io/ioutil"
     "sort"
     "strings"
@@ -40,7 +41,7 @@ func (e Entries) Swap(i, j int) {
 
 func main() {
     // Open, read and put contents of the file in a string variable
-    bytes, err := ioutil.ReadFile("7oldsamr.txt")
+    bytes, err := ioutil.ReadFile(string(os.Args[1]))
     // bytes, err := ioutil.ReadFile("7oldsamr.txt")
     if err != nil {
         fmt.Println("Error reading file")
