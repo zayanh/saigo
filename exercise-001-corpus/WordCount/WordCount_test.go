@@ -27,7 +27,7 @@ func TestSwap(t *testing.T) {
     }
 }
 
-// Would it be better to get the filename from the command line or somewhere else?
+// Would it be better to get the filename from the command line in the test as well?
 func TestSort(t *testing.T) {
     _, testEntries := WordCount("7oldsamr.txt")
 
