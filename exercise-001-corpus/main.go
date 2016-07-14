@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "os"
     w "github.com/zayanh/saigo/exercise-001-corpus/WordCount"
 )
 
@@ -14,8 +15,7 @@ func main() {
     b := testEntries.Less(1,0)
     fmt.Println(b)
 
-    // Does it make sense to pass in a file handle instead of a string?
-    _, entries := w.WordCount("7oldsamr.txt")
+    _, entries := w.WordCount(string(os.Args[1]))
 
     // Can add some error checking here based on result
 
