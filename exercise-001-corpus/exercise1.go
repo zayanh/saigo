@@ -1,83 +1,96 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"strings"
+    "fmt"
+    "io/ioutil"
+    "sort"
+    "strings"
 )
 
-//QUESTION: If I don't manually parse for the newline,
-//  they don't appear if the line doesn't start with whitespace
+type Entry struct {
+    word  string
+    count int
+}
 
-type MapWithOrder struct {
-    baseMap map[string]int
-    orderSlice []string
+// Had to be pointers because the slice won't update
+// properly otherwise
+type Entries []*Entry
+
+// The number of elements in the collection
+func (e Entries) Len() int {
+    return len(e)
+}
+
+// Reports if the element with index i should sort before
+// the element with index j
+func (e Entries) Less(i, j int) bool {
+    if e[i].count > e[j].count {
+        return true
+    } else {
+        return false
+    }
+}
+
+// Swaps the elements with indexes i and j
+func (e Entries) Swap(i, j int) {
+    tmp := Entry{word: e[i].word, count: e[i].count}
+    e[i] = e[j]
+    e[j] = &tmp
 }
 
 func main() {
-    //open, read and put contents of the file in a string variable
-    byteString, err := ioutil.ReadFile("test")
+    // Open, read and put contents of the file in a string variable
+    bytes, err := ioutil.ReadFile("7oldsamr.txt")
+    // bytes, err := ioutil.ReadFile("7oldsamr.txt")
     if err != nil {
         fmt.Println("Error reading file")
         return
     }
-    str := string(byteString)
+    str := string(bytes)
 
-    //get rid of punctuation
+    // Get rid of punctuation
     str = strings.Replace(str, "\"", "", -1)
     str = strings.Replace(str, ",", "", -1)
     str = strings.Replace(str, "!", "", -1)
     str = strings.Replace(str, ":", "", -1)
     str = strings.Replace(str, "-", "", -1)
     str = strings.Replace(str, ".", "", -1)
-    str = strings.Replace(str, "\t", "", -1)
+    str = strings.Replace(str, "    ", "", -1)
 
-    //make it all lower case to compare
+    // Replace newlines with single space
+    str = strings.Replace(str, "\n", " ", -1)
+
+    // Make it all lower case to compare
     str = strings.ToLower(str)
 
-    //split str into a slice of type string at every instance of " "
-    str2 := strings.Split(str, " ")
+    // Split str into a slice of type string at every instance of " "
+    words := strings.Fields(str)
 
-    //
-    m := MapWithOrder{ baseMap: make(map[string]int), orderSlice: make([]string, len(str2)) }
+    // A slice of type Entry
+    var entries Entries
 
-    for _, val := range str2 {
+    // Iterate over each word
+    for _, word := range words {
 
-        // watchout for newlines!
-        str3 := strings.Split(val, "\n")
-
-        for _, val2 := range str3 {
-
-            //multiple sapces give null strings
-            if val2 != "" {
-                m.baseMap[val2]++
-
-                //There are two scenarios here, the entry exists or it doesn't
-                // if it's a new entry, add it to the end:
-                currentIndex := len(m.orderSlice)
-                // fmt.Println(currentIndex)
-                m.orderSlice[currentIndex-1] = val2
-
-                //infinite loop until order is correct
-                for {
-                    if (currentIndex > 2) && 
-                       (m.baseMap[m.orderSlice[currentIndex-1]] > m.baseMap[m.orderSlice[currentIndex-2]]) {
-                        //swap
-                        tmp := m.orderSlice[currentIndex-1]
-                        m.orderSlice[currentIndex-1] = m.orderSlice[currentIndex-2]
-                        m.orderSlice[currentIndex-2] = tmp
-                        break
-                    }
-                    currentIndex--
-                }
-
-                // if the entry does exist
-
+        // Iterate over all the words we have seen already
+        exist := 0
+        for _,e := range entries {
+            if e.word == word {
+                e.count++
+                exist = 1
+                break
             }
+        }
+
+        // Add a new entry in our list if this is a new word
+        if exist == 0 {
+            entries = append(entries, &Entry{word: word, count: 1})
         }
     }
 
-    for _, val := range m.orderSlice {
-        fmt.Println(m.baseMap[val], val)
+    // Let's check our handywork
+    sort.Sort(entries)
+    for _,val := range entries {
+        fmt.Println(val.count, val.word)
     }
 }
