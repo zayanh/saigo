@@ -1,7 +1,7 @@
-package WordCount
+package corpus
 
 import (
-    "fmt"
+    // "fmt"
     "io/ioutil"
     "sort"
     "strings"
@@ -24,30 +24,22 @@ func (e Entries) Len() int {
 // Reports if the element with index i should sort before
 // the element with index j
 func (e Entries) Less(i, j int) bool {
-    if e[i].Count > e[j].Count {
-        return true
-    } else {
-        return false
-    }
+    return e[i].Count > e[j].Count
 }
 
 // Swaps the elements with indexes i and j
 func (e Entries) Swap(i, j int) {
-    tmp := Entry{Word: e[i].Word, Count: e[i].Count}
-    e[i] = e[j]
-    e[j] = &tmp
+    e[i], e[j] = e[j], e[i]
 }
 
-func WordCount(fileName string) (int, Entries) {
+func WordCount(fileName string) (Entries, error) {
     // A slice of type Entry
     var entries Entries
 
     // Open, read and put contents of the file in a string variable
     bytes, err := ioutil.ReadFile(fileName)
-    // bytes, err := ioutil.ReadFile("7oldsamr.txt")
     if err != nil {
-        fmt.Println("Error reading file")
-        return 1, entries
+        return entries, err
     }
     str := string(bytes)
 
@@ -73,25 +65,21 @@ func WordCount(fileName string) (int, Entries) {
     for _, word := range words {
 
         // Iterate over all the words we have seen already
-        exist := 0
+        exists := false
         for _,e := range entries {
             if e.Word == word {
                 e.Count++
-                exist = 1
+                exists = true
                 break
             }
         }
 
         // Add a new entry in our list if this is a new word
-        if exist == 0 {
+        if !exists {
             entries = append(entries, &Entry{Word: word, Count: 1})
         }
     }
 
-    // // Let's check our handywork
     sort.Sort(entries)
-    // for _,val := range entries {
-    //     fmt.Println(val.Count, val.Word)
-    // }
-    return 0, entries
+    return entries, nil
 }
