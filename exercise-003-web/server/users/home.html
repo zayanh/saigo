@@ -4,11 +4,12 @@
 
   <body>
     <h1> Welcome! </h1>
-    <form action="/signup" method="post">
+    <form action="/signup" method="POST">
       <input type="text" name="user" placeholder="Enter desired username" />
+      <!-- <input type="text" name="user" value="kevin" /> -->
       <input type="submit" value="Sign Up" />
 
-      
+
       {{.Message}}
 
       {{ range $key, $value := .UserNames }}
