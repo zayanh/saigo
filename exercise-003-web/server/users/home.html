@@ -5,19 +5,14 @@
   <body>
     <h1> Welcome! </h1>
     <form action="/signup" method="POST">
-      <input type="text" name="user" placeholder="Enter desired username" />
-      <!-- <input type="text" name="user" value="kevin" /> -->
-      <input type="submit" value="Sign Up" />
+        <input type="text" name="user" placeholder="Enter desired username" />
+        <input type="submit" value="Sign Up" />
 
-
-      {{.Message}}
-
-      {{ range $key, $value := .UserNames }}
-        <li>{{ $key }}</li>
-      {{ end }}
-
-      <!-- <h1>I can see your name is {{ .Name }}</h1>
-      <h1>And you have been in existence for {{ .Age }} years</h1> -->
+        <ol>
+            {{ range $key, $value := .Usernames }}
+            <li>{{ $key }}</li>
+            {{ end }}
+        </ol>
     </form>
   </body>
 </html>
