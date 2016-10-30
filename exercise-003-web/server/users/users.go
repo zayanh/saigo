@@ -1,7 +1,6 @@
 package users
 
 import (
-    // "fmt"
     "os"
     "strings"
     "html/template"
