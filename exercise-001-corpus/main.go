@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"sort"
 	"strconv"
+	"os"
 )
 
 
@@ -51,11 +52,20 @@ func Split(r rune) bool {
 
 
 func main() {
+	// define command line parameter flags
+	params := os.Args
+	if len(params) < 2 {
+		fmt.Println("no input file provided. Exiting")
+		return
+	}
+	filename := params[1]
+	//TODO: Make sure path is valid
+
 	// object to hold final answer
 	var lines Lines
 
 	// read the file and store it as a string
-	bs, err := ioutil.ReadFile("7oldsamr.txt")
+	bs, err := ioutil.ReadFile(filename) //("7oldsamr.txt")
 	if err != nil {
 		return
 	}
