@@ -1,1 +1,3 @@
 *.swp
+*.out
+exercise-001-corpus/word_count
